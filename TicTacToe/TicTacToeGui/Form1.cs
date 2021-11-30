@@ -1,74 +1,91 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using TicTacToeLib;
 
-namespace TicTacToeGui
+
+namespace TicTacToe_Gui
 {
     public partial class Form1 : Form
     {
-
-        private int beurt = 0;
-        private string plaatje = "";
-
-        public Form1()
+        
+        public TicTacToeEngine engine;
+        public Form1(TicTacToeEngine engine)
         {
+            this.engine = engine;
             InitializeComponent();
         }
 
         private void button_Click(object sender, EventArgs e)
         {
-            Button button = (Button)sender;
-
-            if (beurt % 2 == 1)
+            Button btn = sender as Button;
+            try
             {
-                plaatje = "X";
+                int cellNumber = Convert.ToInt32(btn.Name.Substring(btn.Name.Length - 1));
+                int buttonText = cellNumber - 1;
+                engine.ChooseCell(cellNumber);
+                btn.Text = engine.cellNumbers1[buttonText];
+                SetResult(engine.Status);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Input string is invalid.");
+            }
+        }
+
+        private void ResetButtons()
+        {
+            engine.Reset();
+            Button[] array = { button1, button2, button3 , button4, button5, button6, button7, button8, button9 };
+            foreach (Button button in array)
+            {
+                button.Text = "";
+            }
+            this.label2.Text = "Player O begin!";
+        }
+
+        /* This method sets the text of the results to the label
+         */
+        private void SetResult(GameStatus status)
+        {
+            if (status == GameStatus.PlayerOPlays)
+            {
+               this.label2.Text = "Player O, it's your turn!";
             }
             else
             {
-                plaatje = "O";
-            }
-            beurt++;
-            button.Text = plaatje;
-
-            if(!(bepaalWinnaar(button1, button5, button9) ||
-            bepaalWinnaar(button1, button4, button7) ||
-            bepaalWinnaar(button1, button2, button3) ||
-            bepaalWinnaar(button2, button5, button8) ||
-            bepaalWinnaar(button3, button6, button9) ||
-            bepaalWinnaar(button4, button5, button6) ||
-            bepaalWinnaar(button7, button8, button9) ||
-            bepaalWinnaar(button3, button5, button7)) && beurt == 9) {
-                System.Windows.Forms.MessageBox.Show("Er is geen Winnaar! ", "Jammer! Niemand wint! ");
-                maakLeeg();
+                this.label2.Text = "Player X, it's your turn!";
             }
 
-                
-                
-        }
-        public bool bepaalWinnaar(Button a, Button b, Button c)
-        {
-            if(a.Text == b.Text &&  a.Text == c.Text && a.Text != "")
+            if (status == GameStatus.PlayerOWins)
             {
-                System.Windows.Forms.MessageBox.Show("De winnaar is " + plaatje, "Er is een Winnaar! ");
-                maakLeeg();
-                return true;
-              
+                this.label2.Text = "Congratulations, player O won!";
+                System.Windows.Forms.MessageBox.Show("Congratulations, player O won!");
+                ResetButtons();
             }
-            return false; 
+            else if (status == GameStatus.PlayerXWins)
+            {
+                this.label2.Text = "Congratulations, player X won!";
+                System.Windows.Forms.MessageBox.Show("Congratulations, player X won!");
+                ResetButtons();
+            }
+            else if (status == GameStatus.Equal)
+            {
+                this.label2.Text = "Tie!";
+                System.Windows.Forms.MessageBox.Show("Tie!");
+                ResetButtons();
+            }
         }
 
-        public void maakLeeg()
+        private void Form1_Load(object sender, EventArgs e)
         {
-            button1.Text = "";
-            button2.Text = "";
-            button3.Text = "";
-            button4.Text = "";
-            button5.Text = "";
-            button6.Text = "";
-            button7.Text = "";
-            button8.Text = "";
-            button9.Text = "";
-            beurt = 0;
-        }
 
+        }
     }
 }

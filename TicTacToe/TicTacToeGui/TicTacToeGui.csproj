@@ -6,4 +6,9 @@
         <UseWindowsForms>true</UseWindowsForms>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\TicTacToeConsole\TicTacToeConsole.csproj" />
+      <ProjectReference Include="..\TicTacToeLib\TicTacToeLib.csproj" />
+    </ItemGroup>
+
 </Project>
