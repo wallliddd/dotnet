@@ -103,9 +103,9 @@ namespace TicTacToeLib
                     Status = GameStatus.Equal;
                 }
             }
-            catch (IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException )
             {
-                Console.WriteLine(e.Message + "\nInvalid choice.");
+                Console.WriteLine("Invalid choice.");
                 return false;
             }
 
